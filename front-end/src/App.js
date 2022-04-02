@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { ethers } from "ethers";
 import twitterLogo from "./assets/twitter-logo.svg";
 import "./App.css";
+import Arena from "./Components/Arena";
 import SelectCharacter from "./Components/SelectCharacter";
 import {
   CONTRACT_ADDRESS,
@@ -76,6 +77,13 @@ const App = () => {
        */
     } else if (currentAccount && !characterNFT) {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+      /*
+       * Scenario #3
+       */
+    } else if (currentAccount && characterNFT) {
+      return (
+        <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
+      );
     }
   };
 
