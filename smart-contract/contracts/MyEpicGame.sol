@@ -36,6 +36,9 @@ contract MyEpicGame is ERC721 {
   // mapping from the nft's tokenId => that NFTs attributes
   mapping(uint256 => CharacterAttributes) public nftHolderAttributes;
 
+  event CharacterNFTMinted(address sender, uint256 tokenId, uint256 characterIndex);
+  event AttackComplete(uint newBossHp, uint newPlayerHp);
+
   // storing the owner of the NFT and reference it later.
   mapping(address => uint256) public nftHolders;
 
@@ -75,6 +78,8 @@ contract MyEpicGame is ERC721 {
       CharacterAttributes memory c = defaultCharacters[i];
       console.log("Done initializing %s w/ HP %s, img %s", c.name, c.hp, c.imageURI);
     }
+
+    // increment here not to start at 0; this can check later for owners
     _tokenIds.increment();
   }
 
@@ -98,6 +103,7 @@ contract MyEpicGame is ERC721 {
       nftHolders[msg.sender] = newItemId;
 
       _tokenIds.increment();
+      emit CharacterNFTMinted(msg.sender, newItemId, _characterIndex);
   }
 
   function tokenURI(uint256 _tokenId) public view override returns (string memory) {
@@ -132,19 +138,20 @@ contract MyEpicGame is ERC721 {
     uint256 playerNFTId = nftHolders[msg.sender];
     require(
         nftHolderAttributes[playerNFTId].hp > 0,
-        "Player must be alive to attack"
+        "Error: Player must be alive to attack"
     );
     // Make sure the boss has more than 0 HP.
     require(
         bigBoss.hp > 0,
-        "Boss already dead!"
+        "Error: Boss already dead!"
     );
+
     CharacterAttributes storage player = nftHolderAttributes[playerNFTId];
     console.log("\nPlayer w/ character %s about to attack. Has %s HP and %s AD", player.name, player.hp, player.attackDamage);
     console.log("Boss %s has %s HP and %s AD", bigBoss.name, bigBoss.hp, bigBoss.attackDamage);
 
     // player attacks boss
-    if (bigBoss.hp <= player.attackDamage) {
+    if (bigBoss.hp < player.attackDamage) {
         bigBoss.hp = 0;
         console.log("Boss %s is dead", bigBoss.name);
     } else {
@@ -160,5 +167,30 @@ contract MyEpicGame is ERC721 {
         player.hp = player.hp - bigBoss.attackDamage;
         console.log("Player %s was attacked! New HP: %s ", player.name, player.hp);
     }
+    console.log("Player attacked boss. New boss hp: %s", bigBoss.hp);
+    console.log("Boss attacked player. New player hp: %s\n", player.hp);
+
+    emit AttackComplete(bigBoss.hp, player.hp);
+  }
+
+  function checkIfUserHasNFT() public view returns (CharacterAttributes memory) {
+    // Get the tokenId of the user's character NFT
+    uint256 userNftTokenId = nftHolders[msg.sender];
+    // If the user has a tokenId in the map, return their character.
+    if (userNftTokenId >= 0) {
+      return nftHolderAttributes[userNftTokenId];
+    } else {
+        // Else, return an empty character.
+        CharacterAttributes memory emptyStruct;
+        return emptyStruct;
+    }
+  }
+
+  function getDefaultCharacter() public view returns (CharacterAttributes[] memory) {
+    return defaultCharacters;
+  }
+
+  function getBoss() public view returns (BigBoss memory) {
+    return bigBoss;
   }
 }

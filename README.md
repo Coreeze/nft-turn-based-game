@@ -1,5 +1,7 @@
 # NFT Turn based game
 
+The frontend is connected to communicate with the smart contract. All is on Rinkeby
+
 Try running some of the following tasks:
 
 ```shell
