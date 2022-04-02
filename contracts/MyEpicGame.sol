@@ -18,6 +18,16 @@ contract MyEpicGame is ERC721 {
     uint attackDamage;
   }
 
+  struct BigBoss {
+    string name;
+    string imageURI;
+    uint hp;
+    uint maxHp;
+    uint attackDamage;
+  }
+
+  BigBoss public bigBoss;
+
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
@@ -33,10 +43,25 @@ contract MyEpicGame is ERC721 {
     string[] memory characterNames,
     string[] memory characterImageURIs,
     uint[] memory characterHp,
-    uint[] memory characterAttackDmg
+    uint[] memory characterAttackDmg,
+    string memory bossName,
+    string memory bossImageURI,
+    uint bossHp,
+    uint bossAttackDamage
   )
     ERC721("Heroes", "HERO")
   {
+
+    bigBoss = BigBoss({
+        name: bossName,
+        imageURI: bossImageURI,
+        hp: bossHp,
+        maxHp: bossHp,
+        attackDamage: bossAttackDamage
+    });
+
+    console.log("Done initializing boss %s w/ HP %s, img %s", bigBoss.name, bigBoss.hp, bigBoss.imageURI);
+
     for(uint i = 0; i < characterNames.length; i += 1) {
       defaultCharacters.push(CharacterAttributes({
         characterIndex: i,
@@ -100,5 +125,40 @@ contract MyEpicGame is ERC721 {
     );
 
     return output;
+  }
+
+  function attackBoss() public {
+    console.log("Attacking boss!");
+    uint256 playerNFTId = nftHolders[msg.sender];
+    require(
+        nftHolderAttributes[playerNFTId].hp > 0,
+        "Player must be alive to attack"
+    );
+    // Make sure the boss has more than 0 HP.
+    require(
+        bigBoss.hp > 0,
+        "Boss already dead!"
+    );
+    CharacterAttributes storage player = nftHolderAttributes[playerNFTId];
+    console.log("\nPlayer w/ character %s about to attack. Has %s HP and %s AD", player.name, player.hp, player.attackDamage);
+    console.log("Boss %s has %s HP and %s AD", bigBoss.name, bigBoss.hp, bigBoss.attackDamage);
+
+    // player attacks boss
+    if (bigBoss.hp <= player.attackDamage) {
+        bigBoss.hp = 0;
+        console.log("Boss %s is dead", bigBoss.name);
+    } else {
+        bigBoss.hp = bigBoss.hp - player.attackDamage;
+        console.log("Boss %s was attacked! New HP: %s ", bigBoss.name, bigBoss.hp);
     }
+
+    // boss attacks player
+    if (player.hp <= bigBoss.attackDamage) {
+        player.hp = 0;
+        console.log("Player %s is dead", player.name);
+    } else {
+        player.hp = player.hp - bigBoss.attackDamage;
+        console.log("Player %s was attacked! New HP: %s ", player.name, player.hp);
+    }
+  }
 }

@@ -1,23 +1,37 @@
 const main = async () => {
   const gameContractFactory = await hre.ethers.getContractFactory("MyEpicGame");
   const gameContract = await gameContractFactory.deploy(
-    ["Leo", "Aang", "Pikachu"], // Names
+    ["Leo", "Aang", "Pikachu"],
     [
-      "https://i.imgur.com/pKd5Sdk.png", // Images
+      "https://i.imgur.com/pKd5Sdk.png",
       "https://i.imgur.com/xVu4vFL.png",
-      "https://i.imgur.com/WMB6g9u.png",
+      "https://i.imgur.com/u7T87A6.png",
     ],
-    [100, 200, 300], // HP values
-    [100, 50, 25] // Attack damage values
+    [100, 200, 300],
+    [100, 50, 25],
+    // boss data
+    "Elon Musk",
+    "https://i.imgur.com/AksR0tt.png",
+    10000,
+    50
   );
   await gameContract.deployed();
   console.log("Contract deployed to:", gameContract.address);
 
-  let txn = await gameContract.mintCharacterNFT(2);
+  let txn = await gameContract.mintCharacterNFT(0);
   await txn.wait();
 
-  let returnedTokenURI = await gameContract.tokenURI(1);
-  console.log("Token URI:", returnedTokenURI);
+  txn = await gameContract.attackBoss();
+  await txn.wait();
+
+  txn = await gameContract.attackBoss();
+  await txn.wait();
+
+  txn = await gameContract.attackBoss();
+  await txn.wait();
+
+  //   let returnedTokenURI = await gameContract.tokenURI(0);
+  //   console.log("Token URI:", returnedTokenURI);
 };
 
 const runMain = async () => {
