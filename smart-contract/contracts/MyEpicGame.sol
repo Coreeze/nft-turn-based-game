@@ -186,7 +186,7 @@ contract MyEpicGame is ERC721 {
     }
   }
 
-  function getDefaultCharacter() public view returns (CharacterAttributes[] memory) {
+  function getAllDefaultCharacters() public view returns (CharacterAttributes[] memory) {
     return defaultCharacters;
   }
 
