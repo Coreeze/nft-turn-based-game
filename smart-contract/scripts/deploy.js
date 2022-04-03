@@ -3,15 +3,15 @@ const main = async () => {
   const gameContract = await gameContractFactory.deploy(
     ["Aang", "Leo", "Pikachu"],
     [
-      "https://i.imgur.com/xVu4vFL.png",
-      "https://i.imgur.com/pKd5Sdk.png",
-      "https://i.imgur.com/u7T87A6.png",
+      "bafybeihj3g7wzzcgy7uxxatcp5nkehij5yp3rse6hsmyh6ddw6x2jvyexm.ipfs.nftstorage.link/",
+      "bafybeibi5vcfcjrdndcmjcwxotdobhdmsitf4zsegxwsdir5tuoydvn6ca.ipfs.nftstorage.link/",
+      "bafybeiet7aw64wfx5hiomhj2gtnp47p4om6xcd2m74p2uehelj4lleyfkm.ipfs.nftstorage.link/",
     ],
     [100, 200, 300],
     [100, 50, 25],
     // boss data
     "Elon Musk",
-    "https://i.imgur.com/AksR0tt.png",
+    "bafybeids36qnyqncelzh743bcpywhqbvuvpoqewd6yhoz2k4mfuqfej6rm.ipfs.nftstorage.link/",
     10000,
     50
   );

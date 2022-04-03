@@ -9,6 +9,7 @@ import {
   transformCharacterData,
 } from "./Components/constants.js";
 import myEpicGame from "./Components/utils/MyEpicGame.json";
+import LoadingIndicator from "./Components/LoadingIndicator";
 
 // Constants
 const TWITTER_HANDLE = "CristiansenL";
@@ -17,6 +18,7 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const App = () => {
   const [currentAccount, setCurrentAccount] = React.useState(null);
   const [characterNFT, setCharacterNFT] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const checkNetwork = async () => {
     try {
@@ -37,6 +39,7 @@ const App = () => {
         return;
       } else {
         console.log("We have the ethereum object", ethereum);
+        setIsLoading(false);
 
         const accounts = await ethereum.request({ method: "eth_accounts" });
         console.log("WINDOWS: ", typeof ethereum.networkVersion);
@@ -56,9 +59,13 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   const renderContent = () => {
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
     /*
      * Scenario #1
      */
@@ -114,6 +121,7 @@ const App = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     checkIfWalletIsConnected();
   }, []);
 
@@ -137,6 +145,7 @@ const App = () => {
       } else {
         console.log("No character NFT found");
       }
+      setIsLoading(false);
     };
 
     // only run this if there is a connected wallet
