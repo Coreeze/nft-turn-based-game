@@ -1,5 +1,7 @@
 # NFT Turn based game
 
+## Game is live [here](https://nft-turn-based-game.vercel.app/)
+
 The frontend is connected to communicate with the smart contract. All is on Rinkeby
 
 To run:
