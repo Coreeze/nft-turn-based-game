@@ -2,14 +2,8 @@
 
 The frontend is connected to communicate with the smart contract. All is on Rinkeby
 
-Try running some of the following tasks:
+To run:
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+Smart contract is already deployed, you only need to run the front-end with `npm run start`.
+
+## ❗The game is on `Rinkeby` and you need some `eth` from a faucet. Have fun!
