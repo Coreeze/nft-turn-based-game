@@ -33,12 +33,17 @@ const App = () => {
       const { ethereum } = window;
 
       if (!ethereum) {
-        console.log("Make sure you have MetaMask!");
+        alert("Make sure you have MetaMask!");
         return;
       } else {
         console.log("We have the ethereum object", ethereum);
 
         const accounts = await ethereum.request({ method: "eth_accounts" });
+        console.log("WINDOWS: ", typeof ethereum.networkVersion);
+
+        if (ethereum.networkVersion !== "4") {
+          alert("Please connect to Rinkeby and refresh page!");
+        }
 
         if (accounts.length !== 0) {
           const account = accounts[0];
@@ -118,6 +123,7 @@ const App = () => {
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
+
       const gameContract = new ethers.Contract(
         CONTRACT_ADDRESS,
         myEpicGame.abi,
